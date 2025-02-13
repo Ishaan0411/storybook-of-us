@@ -1,56 +1,130 @@
 document.addEventListener('DOMContentLoaded', () => {
   let currentPage = 0;
   const pages = [
-    { type: 'image', content: 'assets/page1.jpg', message: [
-      '"The first time I laid eyes on her, I felt something I had never felt before."',
-      '"In the school lab, she stood out—intellectual, beautiful, and effortless."',
-      '"She made me question everything about myself. I was drawn to her in a way I couldn\'t explain."',
-      '"But I quietly accepted that she was beyond my reach."'
-    ] },
-    // ... your other pages data remains the same ...
+    // ... your existing pages array ...
   ];
 
   const flipBook = document.querySelector('.flipbook');
   const pageElement = document.createElement('div');
+  const startButton = document.getElementById('startButton');
+  const audio = document.getElementById('bgMusic');
+  const audioControl = document.getElementById('audioControl');
+  const audioIcon = document.getElementById('audioIcon');
   
+  let isPlaying = false;
+
+  // Audio control functions
+  function toggleAudio() {
+    if (isPlaying) {
+      audio.pause();
+      audioIcon.src = 'assets/volume-off.svg';
+    } else {
+      audio.play();
+      audioIcon.src = 'assets/volume-on.svg';
+    }
+    isPlaying = !isPlaying;
+  }
+
+  // Start button click handler
+  startButton.addEventListener('click', () => {
+    startButton.classList.add('hidden');
+    flipBook.classList.remove('hidden');
+    
+    // Start audio
+    audio.play()
+      .then(() => {
+        isPlaying = true;
+        audioIcon.src = 'assets/volume-on.svg';
+      })
+      .catch(error => {
+        console.log('Audio autoplay prevented:', error);
+        isPlaying = false;
+        audioIcon.src = 'assets/volume-off.svg';
+      });
+    
+    displayPage();
+  });
+
+  // Audio control click handler
+  audioControl.addEventListener('click', toggleAudio);
+
+  // Your existing displayPage function
   function displayPage() {
     const page = pages[currentPage];
-    pageElement.classList.remove('flip', 'final');
     
-    let content = '';
-    if (page.type === 'image') {
-      content = `
-        <img src="${page.content}" alt="Page image">
-        <div class="messages-container">
-          ${page.message.map(msg => `<p class="message">${msg}</p>`).join('')}
-        </div>
-      `;
-    } else {
-      content = `
-        <div class="messages-container">
-          ${page.message.map(msg => `<p class="message">${msg}</p>`).join('')}
-        </div>
-      `;
-    }
+    pageElement.classList.add('fade-exit');
     
-    pageElement.innerHTML = content;
-    pageElement.classList.add('page');
-    flipBook.innerHTML = '';
-    flipBook.appendChild(pageElement);
+    setTimeout(() => {
+      let content = '';
+      if (page.type === 'image') {
+        content = `
+          <img src="${page.content}" alt="Page image">
+          <div class="messages-container">
+            ${page.message.map(msg => `<p class="message">${msg}</p>`).join('')}
+          </div>
+        `;
+      } else {
+        content = `
+          <div class="messages-container">
+            ${page.message.map(msg => `<p class="message">${msg}</p>`).join('')}
+          </div>
+        `;
+      }
+      
+      pageElement.innerHTML = content;
+      pageElement.classList.add('page');
+      
+      updateNavigationButtons();
+      
+      pageElement.classList.remove('fade-exit');
+      pageElement.classList.add('fade-enter');
+      
+      setTimeout(() => {
+        pageElement.classList.remove('fade-enter');
+      }, 50);
+    }, 500);
   }
 
-  function flipPage() {
-    if (currentPage < pages.length - 1) {
-      currentPage++;
-      pageElement.classList.add('flip');
-      setTimeout(displayPage, 500);
-    } else {
-      pageElement.classList.add('final');
-      const messageBox = document.querySelector('.message');
-      messageBox.innerHTML = '<p>And our adventure is just beginning ❤️</p>';
-    }
+  // Your existing navigation button functions
+  function createNavigationButtons() {
+    const navButtons = document.createElement('div');
+    navButtons.className = 'nav-buttons';
+    
+    const prevButton = document.createElement('button');
+    prevButton.className = 'nav-button prev';
+    prevButton.textContent = 'Previous';
+    prevButton.addEventListener('click', () => {
+      if (currentPage > 0) {
+        currentPage--;
+        displayPage();
+      }
+    });
+    
+    const nextButton = document.createElement('button');
+    nextButton.className = 'nav-button next';
+    nextButton.textContent = 'Next';
+    nextButton.addEventListener('click', () => {
+      if (currentPage < pages.length - 1) {
+        currentPage++;
+        displayPage();
+      }
+    });
+    
+    navButtons.appendChild(prevButton);
+    navButtons.appendChild(nextButton);
+    document.body.appendChild(navButtons);
   }
 
-  displayPage();
-  flipBook.addEventListener('click', flipPage);
+  function updateNavigationButtons() {
+    const prevButton = document.querySelector('.nav-button.prev');
+    const nextButton = document.querySelector('.nav-button.next');
+    
+    prevButton.disabled = currentPage === 0;
+    nextButton.disabled = currentPage === pages.length - 1;
+  }
+
+  // Initialize the page
+  pageElement.classList.add('page');
+  flipBook.appendChild(pageElement);
+  createNavigationButtons();
 });
