@@ -130,6 +130,33 @@
             transform: scale(1.1);
         }
 
+        .music-indicator {
+            position: fixed;
+            top: 70px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: float 2s infinite ease-in-out;
+            color: #ff69b4;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .music-indicator::after {
+            content: "↑";
+            font-size: 20px;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
         @media (max-width: 768px) {
             .storybook {
                 width: 95%;
@@ -226,6 +253,12 @@
             const audio = document.getElementById('bgMusic');
             let isPlaying = false;
 
+            // Create music indicator
+            const musicIndicator = document.createElement('div');
+            musicIndicator.className = 'music-indicator';
+            musicIndicator.textContent = 'Music';
+            document.body.appendChild(musicIndicator);
+
             // Start audio
             audio.volume = 0.5;
             
@@ -238,6 +271,7 @@
                     soundBtn.textContent = '♫';
                 }
                 isPlaying = !isPlaying;
+                musicIndicator.style.display = 'none';
             });
 
             function createPage(pageData) {
