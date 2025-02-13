@@ -17,7 +17,8 @@
   background-color: #f5f5f5;
   transform-style: preserve-3d;
   transition: transform 1s ease-in-out;
-  overflow: hidden;
+  overflow-y: auto;
+  padding-bottom: 20px;
 }
 
 .page.flip {
@@ -28,25 +29,34 @@
   width: 100%;
   height: auto;
   object-fit: contain;
-  max-height: 90%; /* Ensures the image doesn't get too large */
-  margin-bottom: 20px; /* Adds some spacing below the image */
+  max-height: 60%;
+  margin-bottom: 20px;
+}
+
+/* Message container */
+.messages-container {
+  position: relative;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 40%;
+  overflow-y: auto;
 }
 
 /* Styling for text messages */
 .message {
-  position: absolute;
-  bottom: 10px;
-  left: 20px;
+  position: relative;
   font-size: 18px;
   color: white;
   font-family: 'Arial', sans-serif;
-  max-width: 80%;
-  padding: 10px;
+  width: 80%;
+  margin: 0 auto;
+  padding: 10px 15px;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 5px;
-  margin: 10px 0;
-  line-height: 1.5; /* Increases line spacing to avoid overlap */
-  white-space: normal; /* Allows the text to wrap to the next line */
+  line-height: 1.5;
+  white-space: normal;
 }
 
 /* Final page (to stop flipping) */
@@ -54,10 +64,24 @@
   transform: rotateY(0deg);
 }
 
-/* Container for the flipbook (to give 3D perspective) */
+/* Container for the flipbook */
 .flipbook {
   width: 100%;
   height: 500px;
   perspective: 1500px;
   position: relative;
+}
+
+/* Scrollbar styling */
+.messages-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
 }
