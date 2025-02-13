@@ -7,15 +7,22 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="flipbook">
+    <button id="startButton" class="start-button">Start Our Story ❤️</button>
+    
+    <div class="flipbook hidden">
         <div class="storybook-container">
             <!-- Pages will be dynamically inserted here by JavaScript -->
         </div>
     </div>
+
+    <button class="audio-control" id="audioControl">
+        <img src="assets/volume-on.svg" alt="Toggle sound" id="audioIcon">
+    </button>
     
-    <script src="script.js"></script>
-    <audio autoplay loop>
+    <audio id="bgMusic" loop>
         <source src="assets/music.mp3" type="audio/mp3">
     </audio>
+    
+    <script src="script.js"></script>
 </body>
 </html>
