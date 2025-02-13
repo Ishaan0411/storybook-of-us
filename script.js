@@ -15,11 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const pageElement = document.createElement('div');
   
   function displayPage() {
-    pageElement.classList.remove('flip');
     const page = pages[currentPage];
     const pageContent = page.type === 'image' ? `<img src="${page.content}" alt="Page image">` : '';
     messageBox.innerHTML = `<p>${page.message}</p>`;
+    pageElement.classList.remove('flip', 'final');
     pageElement.innerHTML = pageContent;
+    pageElement.classList.add('page');
     flipBook.innerHTML = '';
     flipBook.appendChild(pageElement);
   }
